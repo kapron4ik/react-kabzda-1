@@ -1,37 +1,39 @@
 import React from 'react';
 import s from './Dialogs.module.css'
 import {NavLink} from "react-router-dom";
+import DialogItem from "./DialogItem/DialogItem";
+import Message from "./Message/Message";
+import {sendMessageCreator, updateNewMessageBodyCreator} from "../../redux/Dialogs-reducer";
 
-const DialogItem = (props) => {
-    return (
-        <div className={s.dialog + ' ' + s.active}>
-            <NavLink to={"/dialogs/" + props.id}>
-                {props.name}
-            </NavLink>
-        </div>
-    )
-}
 
-const Message = (props) => {
-    return (
-        <div className={s.message}>{props.message}</div>
-    )
-}
+
+
 
 const Dialogs = (props) => {
+    let state = props.dialogsPage
+
+    let dialogsElement = state.dialogs.map(d => < DialogItem name={d.name} id={d.id}/>);
+    let messagesElement = state.messages.map(m => < Message message={m.message}/>);
+    let newMessageBody = state.newMessageBody;
+    let onSendMessageClick = () => {
+        props.sendMessage();
+    }
+    let onNewMessageChange = (e) => {
+        let body = e.target.value;
+        props.updateNewMessageBody(body);
+    }
+
     return (
         <div className={s.dialogs}>
             <div className={s.dialogsItems}>
-                < DialogItem name="Vasia" id="1" />
-                < DialogItem name="Pavlik" id="2" />
-                < DialogItem name="Dunkan" id="3" />
-                < DialogItem name="Kim" id="4" />
-                < DialogItem name="Dima" id="5" />
+                {dialogsElement}
             </div>
             <div className={s.messages}>
-                < Message message="Привет!"/>
-                < Message message="Как вы сегодня доехали на работу?"/>
-                < Message message="Да как и вчера, ты все прекрастно понимаешь."/>
+                <div>{messagesElement}</div>
+                <div><textarea value = {newMessageBody}
+                                onChange={onNewMessageChange}
+                                 placeholder='Enter your message'/></div>
+                <div><button onClick={onSendMessageClick}>Send</button></div>
             </div>
         </div>
     )
