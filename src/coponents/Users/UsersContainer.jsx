@@ -10,6 +10,7 @@ import {
 import Users from "./Users";
 import Preloader from "../common/Preloader/Preloader";
 import {usersAPI} from "../../api/api";
+import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 
 
 class UsersContainer extends React.Component {
@@ -52,6 +53,8 @@ let mapStateToProps = (state) => {
     }
 }
 
+let withRedirect = withAuthRedirect(UsersContainer)
+
 export default connect(mapStateToProps,
     {
         follow,
@@ -60,4 +63,4 @@ export default connect(mapStateToProps,
         toggleFollowingProgress,
         getUsers
     }
-)(UsersContainer);
+)(withRedirect);
